@@ -1,0 +1,435 @@
+meta:
+  engine: 4.1.0
+  name: Temper Squall
+
+units:
+  # Proxy Spacing Variables
+  kx: cx # standard choc width of 18mm
+  ky: cy # standard choc hight of 17mm
+  # Padding Variables
+  px: kx + 4
+  py: ky + 4
+  # change web view to choc sizes
+  $default_width: 18 
+  $default_height: 17
+  
+  standoff_size: 5 #size for standoff holes on pcb
+  screen_standoff_size: 2
+
+  hole1_x: -0.5 kx - 0
+  hole1_y: -0.3 ky - 0
+
+  hole2_x: -0.52 kx
+  hole2_y: -0.35 ky
+
+  hole3_x: 0.5 kx + 1
+  hole3_y: 0.75 ky - 0.5
+
+  hole4_x: 0.5 kx - 14
+  hole4_y: -0.5 ky - 2.1
+
+  hole5_x: -0.5 kx - 0.6
+  hole5_y: -1.24 ky + 1.5
+
+  voff: 4
+
+points:
+  zones:
+    matrix:
+      anchor: # Fix placement on KICAD sheet
+        shift: [100, -100]
+      key:
+        padding: 1ky
+        spread: 1kx
+      rows:
+        bottom:
+          row_net: row_bottom         
+        home:
+          row_net: row_home
+        top:
+          row_net: row_top
+      columns:
+        pinky:
+          key.column_net: col_pinky          
+        ring:
+          # note the dot notation compared to thumb notation
+          key.stagger: 12
+          key.splay: -4
+          key.spread: 1kx + 0.5 # Avoids clashing of keys when splayed
+          key.column_net: col_ring
+        middle:
+          key.stagger: 6
+          key.splay: -4
+          key.spread: 1kx + 0.5 # Avoids clashing of keys when splayed
+          key.column_net: col_middle
+        index:
+          key.stagger: -6
+          key.column_net: col_index
+        far:
+          key.stagger: -2
+          key.column_net: col_far   
+    thumb:
+      key:
+        padding: 1ky
+        spread: 1kx
+      anchor:
+        ref: matrix_far_bottom
+        shift: [-24,-19]
+      rows:
+        cluster:
+          row_net: row_thumb
+      columns:
+        inner:
+          key.column_net: col_middle          
+        middle:
+          key:
+            rotate: -15
+            stagger: -2
+            shift: [2.2,-0.5]
+          key.column_net: col_index
+        outer:
+          key:
+            rotate: -30
+            stagger: -4
+            shift: [-0.2,-4.8]
+            width: 1.5ky
+            splay: 90
+          key.column_net: col_far
+
+outlines:
+  raw:
+    - what: rectangle
+      where: true
+      size: [kx, ky]
+  keys:
+    - what: rectangle
+      where: true
+      bound: false
+      size: [kx-0.5,ky-0.5]
+
+  # keys without padding
+  key-plug:
+    - what: rectangle
+      where: true
+      size: [13.8, 13.8]
+
+  mcu:
+    - what: rectangle
+      where:
+      - ref: matrix_far_top
+        shift: [17.7, -20.5 - 2.5] # v2 - Creates more space between inner key col and mcu (issue #4)
+      size: [25, 63]
+      fillet: 2
+
+  board:
+    - what: polygon
+      operation: stack
+      points:
+        - ref: matrix_pinky_top
+          shift: [-0.5kx,0.5ky]
+        - ref: matrix_pinky_top
+          shift: [0.5kx,0.5ky]
+        - ref: matrix_ring_top
+          shift: [-0.5kx,0.5ky]
+        - ref: matrix_ring_top
+          shift: [0.5kx,0.5ky]
+        - ref: matrix_middle_top
+          shift: [-0.5kx,0.5ky]
+        - ref: matrix_middle_top
+          shift: [0.5kx,0.5ky]
+        - ref: matrix_index_top
+          shift: [-0.5kx,0.5ky]
+        - ref: matrix_index_top
+          shift: [0.5kx,0.5ky]
+        - ref: matrix_far_top
+          shift: [-0.5kx,0.5ky]
+        - ref: matrix_far_top
+          shift: [0.5kx,0.5ky]
+        - ref: matrix_far_bottom
+          shift: [0.5kx,-0.5ky]  
+        - ref: thumb_outer_cluster
+          shift: [0.6kx,0.5ky]   
+        - ref: thumb_outer_cluster
+          shift: [0.6kx,-0.5ky]   
+        - ref: thumb_outer_cluster
+          shift: [-0.75kx,-0.5ky]  
+        - ref: thumb_middle_cluster
+          shift: [0.5kx,-0.5ky]   
+        - ref: thumb_middle_cluster
+          shift: [-0.5kx,-0.5ky]  
+        - ref: thumb_inner_cluster
+          shift: [-0.5kx,-0.5ky]  
+        - ref: matrix_ring_bottom
+          shift: [0.5kx,-0.5ky]  
+        - ref: matrix_ring_bottom
+          shift: [-0.4kx,-0.5ky]  
+        - ref: matrix_pinky_bottom
+          shift: [0.5kx,-0.5ky]  
+        - ref: matrix_pinky_bottom
+          shift: [-0.5kx,-0.5ky]   
+      fillet: 2
+
+  pcb-board:
+    - name: board
+    - operation: add
+      name: mcu
+  combo:
+    - name: pcb-board
+    - operation: subtract
+      name: keys
+  top-plate:
+    - name: board
+    - operation: subtract
+      name: key-plug
+
+pcbs:
+  squall-pcb:
+    template: kicad8
+    outlines:
+      main:
+        outline: pcb-board
+    footprints:
+      choc_hotswap:
+        what: ceoloide/switch_choc_v1_v2
+        where: true
+        params:
+          from: "{{colrow}}"
+          to: "{{column_net}}"
+          include_corner_marks: true
+          include_keycap: true
+          keycap_height: 16.5
+          keycap_width: 17.5
+          reversible: true
+          hotswap: true
+          choc_v2_support: false
+
+      diode:
+        what: ceoloide/diode_tht_sod123
+        where: true
+        params:
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+          include_tht: false
+          include_traces_vias: true
+          reversible: true
+        adjust:
+          # rotate: -90
+          # shift: [8.25,4.2]
+          shift: [0, -5]
+          # resist: true
+
+      mcu:
+        what: ceoloide/mcu_nice_nano
+        where:
+          - ref: matrix_far_home
+            shift: [19.8, 10.8 - voff] # v2 - creates more space between mcu and key colums (issue #5) : v1:18.8
+        params:
+          reversible: true
+          reverse_mount: true # false I think means the jumpers would need to be soldered on the front side.
+          show_silk_labels: false
+          #RAW:
+          #GND: 
+          #RST: 
+          #VCC: 
+          P21: col_extra
+          P20: col_pinky
+          P19: col_ring
+          P18: col_middle
+          P15: col_index
+          P14: col_far
+          #P16:
+          #P10:
+
+          P1: CS
+          #P0:
+          P2: MOSI
+          P3: SCK
+          P4: row_top
+          P5: row_home
+          P6: row_bottom
+          P7: row_thumb
+          #P8:
+          #P9:
+
+      # v2 - fixes display alignment and corrects connection with mcu... hopefully (fixes issues #6 and #7)
+      display:
+        what: ceoloide/display_nice_view
+        params:
+          reversible: true
+          include_labels: true
+        where:
+          - ref: matrix_far_home
+            shift: [19.8, 7.5 - voff] # v1 = 18.8
+
+      battery:
+        what: ceoloide/battery_connector_jst_ph_2
+        params:
+          reversible: true
+        where:
+          - ref: matrix_far_home
+            shift: [23.5, -14.5 - voff]
+            rotate: -90
+
+      power:
+        what: ceoloide/power_switch_smd_side
+        params:
+          invert_behavior: true
+          reversible: true
+        where:
+          - ref: matrix_far_home
+            shift: [28.5, -17 - voff]
+            rotate: 0
+
+      reset:
+        what: ceoloide/reset_switch_tht_top
+        params:
+          reversible: true
+          from: GND
+          to: RST
+        where:
+          - ref: matrix_far_home
+            shift: [20, -20.5 - voff]
+            rotate: 0
+      tempest:
+        what: ceoloide/utility_text
+        where:
+          - ref: matrix_index_home
+            shift: [-17, -0.5ky 3]
+        params:
+          text: "The Squall"
+          height: 6
+          width: 2
+          knockout: false
+          reversible: true
+          italic: true
+            
+      hole_1:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: matrix_ring_top
+            shift: [hole1_x, hole1_y]
+        params:
+          hole_size: standoff_size
+          hole_drill: standoff_size
+      hole_2:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: matrix_far_top
+            shift: [hole2_x, hole2_y]
+        params:
+          hole_size: standoff_size
+          hole_drill: standoff_size
+      hole_3:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: thumb_middle_cluster 
+            shift: [hole3_x, hole3_y]
+        params:
+          hole_size: standoff_size
+          hole_drill: standoff_size
+      hole_4:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: matrix_index_bottom
+            shift: [hole4_x, hole4_y]
+        params:
+          hole_size: standoff_size
+          hole_drill: standoff_size
+      hole_5:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: matrix_ring_home
+            shift: [hole5_x, hole5_y]
+        params:
+          hole_size: standoff_size
+          hole_drill: standoff_size
+
+      ### mcu cover holes
+      hole_screen_L:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: matrix_far_bottom
+            shift: [0.5 kx + 4 + 0, -0.4 ky - 0]
+        params:
+          hole_size: screen_standoff_size
+          hole_drill: screen_standoff_size
+      hole_screen_R:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: matrix_far_bottom
+            shift: [0.5 kx + 4 + 14, -0.4 ky - 6.5 - 0]
+        params:
+          hole_size: screen_standoff_size
+          hole_drill: screen_standoff_size
+
+  ###### TOPPLATE
+  squall-top-plate:
+    template: kicad8
+    outlines:
+      main:
+        outline: top-plate
+    footprints:
+      hole_1:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: matrix_ring_top
+            shift: [hole1_x, hole1_y]
+      hole_2:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: matrix_far_top
+            shift: [hole2_x, hole2_y]
+      hole_3:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: thumb_middle_cluster 
+            shift: [hole3_x, hole3_y]
+      hole_4:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: matrix_index_bottom
+            shift: [hole4_x, hole4_y]
+      hole_5:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: matrix_ring_home
+            shift: [hole5_x, hole5_y]
+
+  ###### TOPPLATE
+  squall-bottom-plate:
+    template: kicad8
+    outlines:
+      main:
+        outline: pcb-board
+    footprints:
+      hole_1:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: matrix_ring_top
+            shift: [hole1_x, hole1_y]
+      hole_2:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: matrix_far_top
+            shift: [hole2_x, hole2_y]
+      hole_3:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: thumb_middle_cluster 
+            shift: [hole3_x, hole3_y]
+      hole_4:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: matrix_index_bottom
+            shift: [hole4_x, hole4_y]
+      hole_5:
+        what: ceoloide/mounting_hole_npth
+        where:
+          - ref: matrix_ring_home
+            shift: [hole5_x, hole5_y]
+cases:
+  bottom:
+    - name: pcb-board
+      extrude: 1
+
+ 
