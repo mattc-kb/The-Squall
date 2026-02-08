@@ -13,4 +13,4 @@ Included in the repo are the ergogen config and footprint files as well as the K
 Soldering of the jumpers for the controller, NiceView and the power connector is done on the back of the board. The same side as the sockets and diodes.
 The power switch is also intended to be mounted on the underside of board.
 
-![Squall v1.0 pcb](pictures/squall_v1_PCB2)
+![Squall v1.0 pcb](pictures/squall_v1_PCB2.jpg)
