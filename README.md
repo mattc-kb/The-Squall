@@ -16,4 +16,4 @@ The power switch is also intended to be mounted on the underside of board.
 ![Squall v1.0 pcb](pictures/squall_v1_PCB2.jpg)
 
 ## Firmware:
-I have loaded corne firmware successfully onto this board. 
+I have loaded and I am currently using Corne firmware successfully on this board. 
