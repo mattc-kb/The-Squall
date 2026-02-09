@@ -1,9 +1,9 @@
-# The-Squall
+# The Squall v1.0
 Wireless split keyboard build based off of the Tempest which in turn is based on the Temper and Chocofi.
 
 ![Squall v1.0](pictures/squall_v1_high.jpg)
 
-I wanted a splay for the outer columns slightly more agressive than the Tempestv2, but retain the thumb cluster placement of the Temper and Chocofi.
+I wanted a splay for the outer columns, but a slightly more agressive stagger than the Tempestv2 while retaining the thumb cluster placement of the Temper and Chocofi.
 
 Included in the repo are the ergogen config and footprint files as well as the Kicad output and gerbers for both the PCB and the plates.
 
@@ -14,3 +14,6 @@ Soldering of the jumpers for the controller, NiceView and the power connector is
 The power switch is also intended to be mounted on the underside of board.
 
 ![Squall v1.0 pcb](pictures/squall_v1_PCB2.jpg)
+
+## Firmware:
+I have loaded corne firmware successfully onto this board. 
