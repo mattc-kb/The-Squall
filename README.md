@@ -7,6 +7,14 @@ I wanted a splay for the outer columns, but a slightly more agressive stagger th
 
 Included in the repo are the ergogen config and footprint files as well as the Kicad output and gerbers for both the PCB and the plates.
 
+### Bill of materials:
+36 smd diodes
+36 Choc hotswap sockets
+2 NiceNano / nRF52840 BLE controllers
+2 JST sockets
+2 smd power switches
+2 reset switches
+
 ![Squall v1.0 plates](pictures/squall_v1_plates.jpg)
 
 ## Assembly:
