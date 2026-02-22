@@ -3,7 +3,7 @@ meta:
   name: Temper Squall
 
 units:
-  # Proxy Spacing Variables
+  # Spacing Variables
   kx: cx # standard choc width of 18mm
   ky: cy # standard choc hight of 17mm
   # Padding Variables
@@ -117,7 +117,7 @@ outlines:
     - what: rectangle
       where:
       - ref: matrix_far_top
-        shift: [17.7, -20.5 - 2.5] # v2 - Creates more space between inner key col and mcu (issue #4)
+        shift: [17.7, -20.5 - 2.5]
       size: [25, 63]
       fillet: 2
 
@@ -222,7 +222,7 @@ pcbs:
         what: ceoloide/mcu_nice_nano
         where:
           - ref: matrix_far_home
-            shift: [19.8, 10.8 - voff] # v2 - creates more space between mcu and key colums (issue #5) : v1:18.8
+            shift: [19.8, 10.8 - voff]
         params:
           reversible: true
           reverse_mount: true # false I think means the jumpers would need to be soldered on the front side.
@@ -251,7 +251,6 @@ pcbs:
           #P8:
           #P9:
 
-      # v2 - fixes display alignment and corrects connection with mcu... hopefully (fixes issues #6 and #7)
       display:
         what: ceoloide/display_nice_view
         params:
